@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+  </head>
+  <style type="text/css">
+    body {
+      width: 100%;
+      height: 100vh;
+    }
+    
+    .bg-default {
+      position: absolute;
+      width: 100%;
+      left: 0;
+    }
+    
+    .img-pos {
+      width: 515px;
+      height: 750px;
+      position: absolute;
+    }
+
+    .zm {
+      transform: rotateY(180deg);
+      transition: transform 1s ease-in-out;
+    }
+
+    .bm {
+      transform: rotateY(180deg);
+      transition: transform 1s ease-in-out;
+      z-index: 2;
+    }
+
+    button {
+      position: absolute;
+      left: 600px;
+    }
+
+    .eyes {
+      background-image: radial-gradient(rgb(255 0 0 / 0%) 50%, rgb(0 0 0 / 60%) 66%, #050404 80%, #000);
+      width: 100%;
+      position: absolute;
+      /* height: 400px; */
+      z-index: 1000;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      transition: all 1s ease-in-out;
+    }
+    
+    .bg {
+      top: 0;
+      height: 100vh;
+      background-color: #000;
+      z-index: 900;
+    }
+    .bg-top {
+      /* background-image: linear-gradient(#000 626.5px, #ff00 626.5px, #ff00 1116.5px, #000 1116.5px, #000); */
+      background-color: #000;
+      z-index: 999;
+      top: 0;
+      transition: all 1s ease-in-out;
+    }
+    .bg-bottom {
+      background-color: #000;
+      z-index: 999;
+      bottom: 0;
+      transition: all 1s ease-in-out;
+    }
+    /* .bg-map {
+      z-index: 990;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      margin: auto;
+      transition: height 1s ease-in-out;
+      background-image: url(img/map.jpg);
+      overflow: hidden;
+    } */
+    .bg-map {
+      z-index: 990;
+      width: 100%;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+    }
+  </style>
+  <body>
+    <!-- 开头背景和睁眼效果 -->
+    <div id='bgTop' class="bg-top bg-default"></div>
+    <div id="eyes" class="eyes"></div>
+    <div id='bgBottom' class="bg-bottom bg-default"></div>
+    <!-- <div id="bg" class="bg bg-default"></div> -->
+    <!-- <div id='bgMap' style="z-index: 998;" class="bg-map"></div> -->
+    <img src="img/map.jpg" class="bg-map" />
+    
+    <!-- 翻转效果 -->
+    <img id="bm"
+      src="img/src=http___i3.img.969g.com_news_imgx2014_05_09_296_165542_fe7f4.jpg&refer=http___i3.img.969g.jpg"
+      class="bm img-pos">
+    <img id='zm' src="./img/91-160P2115941.jpg" class="zm img-pos">
+    <button type="button" onclick="handleTranstion()">开始翻转</button>
+    <button type="button" onclick="handleTranstionBack()" style="top: 100px;">转回去</button>
+  </body>
+  <script type="text/javascript">
+    let z = 10
+    const screenW = document.body.offsetWidth
+    const screenH = document.body.offsetHeight
+    
+    // 眨眼结束。眼睛睁开
+    function openEyes() {
+      const eyes = document.getElementById('eyes')
+      const bgBottom = document.getElementById('bgBottom')
+      const bgTop = document.getElementById('bgTop')
+      // eyes.style.transition = 'none'
+      eyes.style.transitionDuration = bgBottom.style.transitionDuration = bgTop.style.transitionDuration = '1s'
+      eyes.style.opacity = 0 // 眼睛完全睁开
+      bgTop.style.opacity = bgBottom.style.opacity = 0
+      // 上下遮挡打开
+      // setTimeout(() => {
+      //   bgTop.style.height = bgBottom.style.height = 0
+      //   bgTop = bgBottom = null
+      // }, 1000)
+    }
+    // 眨眼
+    function wink(eyesH, time = 1, isEnd = false) {
+      const eyes = document.getElementById('eyes')
+      // const bgMap = document.getElementById('bgMap')
+      // bgMap.style.height = eyesH + 'px'
+      const bgHeight = screenH / 2 - eyesH / 2
+      const bgBottom = document.getElementById('bgBottom')
+      const bgTop = document.getElementById('bgTop')
+      eyes.style.transitionDuration = bgBottom.style.transitionDuration = bgTop.style.transitionDuration = time + 's'
+      
+      eyes.style.height = eyesH + 'px'
+      bgBottom.style.height = bgTop.style.height = bgHeight + 'px'
+      if (isEnd) {
+        setTimeout(() => {
+          openEyes()
+        }, 1800)
+      }
+    }
+    wink(0)
+    window.requestAnimationFrame(() => {
+      wink(screenW / 5)
+    })
+
+    let i = 0
+    const winkInterval = setInterval(() => {
+      i++
+      let h = 10
+      let isEnd = false
+      if (i === 2) {
+        h = screenW / 4
+      } else if (i === 4) {
+        h = screenW / 3
+        isEnd = true
+        clearInterval(winkInterval)
+      }
+      wink(h, 1 + i * 0.2, isEnd)
+    }, 1200 + i * 200)
+    
+    // 睁眼效果
+    // function wink() {
+    //   const eyes = document.getElementById('eyes')
+    //   // eyes.style.backgroundImage = 
+    // }
+
+    function handleTranstion() {
+      const zm = document.getElementById('zm')
+      const bm = document.getElementById('bm')
+      zm.style.transform = 'rotateY(90deg)'
+      bm.style.transform = 'rotateY(90deg)'
+      z += 2
+      setTimeout(() => {
+        // bm.style.display = 'none'
+        zm.style.zIndex = z
+        bm.style.zIndex = 0
+        zm.style.transform = 'rotateY(0deg)'
+        bm.style.transform = 'rotateY(0deg)'
+      }, 1000)
+    }
+
+    function handleTranstionBack() {
+      const zm = document.getElementById('zm')
+      const bm = document.getElementById('bm')
+      zm.style.transform = 'rotateY(90deg)'
+      bm.style.transform = 'rotateY(90deg)'
+      z += 2
+      setTimeout(() => {
+        bm.style.zIndex = z
+        // bm.style.display = 'inherit'
+        zm.style.zIndex = 0
+        setTimeout(() => {
+          zm.style.transform = 'rotateY(180deg)'
+          bm.style.transform = 'rotateY(180deg)'
+        }, 100)
+      }, 1000)
+    }
+  </script>
+</html>
